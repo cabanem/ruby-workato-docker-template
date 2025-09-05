@@ -1,0 +1,47 @@
+{
+  "name": "${localWorkspaceFolderBasename}",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "installOhMyZsh": true
+    }
+  },
+  
+  "mounts": [
+    "source=${localWorkspaceFolderBasename}-gems,target=/usr/local/bundle,type=volume",
+    "source=${localWorkspaceFolderBasename}-bashhistory,target=/commandhistory,type=volume"
+  ],
+  
+  "postCreateCommand": "bundle install || true",
+  "postAttachCommand": "workato --version && echo 'Workato SDK ready!'",
+  
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "anthropic.claude-code",
+        "github.copilot",
+        "shopify.ruby-lsp"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "files.watcherExclude": {
+          "**/vendor/bundle/**": true
+        }
+      }
+    }
+  },
+  
+  "forwardPorts": [3000, 4567, 8080],
+  
+  "remoteEnv": {
+    "HISTFILE": "/commandhistory/.bash_history",
+    "BUNDLE_APP_CONFIG": "/usr/local/bundle"
+  }
+}
